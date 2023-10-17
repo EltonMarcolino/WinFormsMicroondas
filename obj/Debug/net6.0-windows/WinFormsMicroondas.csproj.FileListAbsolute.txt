@@ -14,3 +14,8 @@ C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\refint\W
 C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\WinFormsMicroondas.pdb
 C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\WinFormsMicroondas.genruntimeconfig.cache
 C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\ref\WinFormsMicroondas.dll
+C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\WinFormsMicroondas.Properties.Resources.resources
+C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\WinFormsMicroondas.Telas.CadastreSe.resources
+C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\WinFormsMicroondas.Telas.Customizados.resources
+C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\WinFormsMicroondas.Telas.Login.resources
+C:\Users\elton\source\repos\WinFormsMicroondas\obj\Debug\net6.0-windows\WinFormsMicroondas.csproj.AssemblyReference.cache

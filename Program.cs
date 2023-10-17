@@ -1,3 +1,6 @@
+using WinFormsMicroondas.Telas;
+
+
 namespace WinFormsMicroondas
 {
     internal static class Program
@@ -6,7 +9,7 @@ namespace WinFormsMicroondas
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.Run(new Login());
         }
     }
 }
