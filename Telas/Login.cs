@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 
 
+
 namespace WinFormsMicroondas.Telas
 {
     public partial class Login : Form
@@ -30,7 +31,7 @@ namespace WinFormsMicroondas.Telas
         {
             Application.Exit();
         }
-
+      
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             Controle controle = new Controle();

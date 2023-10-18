@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
-using WinFormsMicroondas.Telas;
 
 namespace WinFormsMicroondas
 {
@@ -13,6 +12,10 @@ namespace WinFormsMicroondas
         private int tempoRestante = TempoPadraoSegundos;
         private bool emAndamento = false;
         private bool pausado = false;
+        private System.Timers.Timer timer;
+        private System.Windows.Forms.Timer descongelamentoTimer;
+        private int tempoDescongelamento;
+      
 
         public Form1()
         {
@@ -89,17 +92,17 @@ namespace WinFormsMicroondas
         private void btnPipoca_Click(object sender, EventArgs e)
         {
             // Configure o Timer com um intervalo de 10 segundos e defina a lógica para interromper o aquecimento
-            timer = new Timer { Interval = 10000, Enabled = false };
-            timer.Tick += (sender, args) =>
-            {
-                timer.Stop();
-                // Coloque aqui a lógica para interromper o aquecimento, por exemplo:
-                // Parar o aquecimento ou exibir uma mensagem
-                MessageBox.Show("Aquecimento interrompido devido a intervalo de 10 segundos entre estouros de milho.", "Aviso");
-            };
+            timer = new System.Timers.Timer { Interval = 10000, Enabled = false };
+            timer.Elapsed += Timer_Elapsed; // Alterei para o evento Elapsed
 
             // Inicie o temporizador quando o aquecimento for iniciado
             IniciarAquecimento();
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            timer.Stop();
+            MessageBox.Show("Aquecimento interrompido devido a intervalo de 10 segundos entre estouros de milho.", "Aviso");
         }
 
         // Método para iniciar o aquecimento
@@ -151,7 +154,7 @@ namespace WinFormsMicroondas
                 IniciarDescongelamento();
 
                 // Aguarde a metade do tempo e vire a carne
-                System.Threading.Thread.Sleep(tempoSegundos / 2 * 1000); // Aguarde metade do tempo em milissegundos
+                Thread.Sleep(tempoSegundos / 2 * 1000); // Aguarde metade do tempo em milissegundos
                 VirarCarne(); // Chame a função para virar a carne
             }
             else
@@ -179,7 +182,7 @@ namespace WinFormsMicroondas
                 IniciarDescongelamento();
 
                 // Aguarde a metade do tempo e vire o frango
-                System.Threading.Thread.Sleep(tempoSegundos / 2 * 1000); // Aguarde metade do tempo em milissegundos
+                Thread.Sleep(tempoSegundos / 2 * 1000); // Aguarde metade do tempo em milissegundos
                 VirarFrango(); // Chame a função para virar o frango
             }
             else
@@ -196,27 +199,174 @@ namespace WinFormsMicroondas
 
             if (VerificarRecipienteSeguro())
             {
-                if (IniciarAquecimento(tempoSegundos, potencia))
-                {
-                    // Aquecimento interrompido ou cancelado
-                    MessageBox.Show("Aquecimento interrompido ou cancelado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                {
-                    // Aquecimento concluído
-                    MessageBox.Show("Aquecimento concluído.", "Concluído", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                // Exibir instruções em um MessageBox
+                string instrucoes = "Alimento: Feijão congelado\nTempo: 8 minutos\nPotência: 9\n\nInstruções:\nDeixe o recipiente destampado e, em casos de plástico, tenha cuidado ao retirar o recipiente, pois o mesmo pode perder resistência em altas temperaturas.";
+                MessageBox.Show(instrucoes, "Instruções para Cozimento de Feijão", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Configurar o micro-ondas
+                ConfigurarMicroondas(tempoSegundos, potencia);
+
+                // Iniciar o aquecimento
+                IniciarAquecimento(PotenciaPadrao, tempoSegundos);
             }
             else
             {
                 // Mensagem de precaução
                 MessageBox.Show("Deixe o recipiente destampado e, em casos de plástico, tenha cuidado ao retirar o recipiente, pois o mesmo pode perder resistência em altas temperaturas.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
         }
 
+        private void ConfigureMicroondas(int tempoSegundos, int potencia)
+        {
+            // Implemente a lógica de configuração do micro-ondas aqui
+        }
 
+        private bool VerificarRecipienteSeguro()
+        {
+            // Suponhamos que você queira verificar se o recipiente é de material adequado (não plástico) e suporta altas temperaturas.
+            bool recipienteSeguro = true;
 
+            // Se o recipiente for de plástico, não é seguro.
+            string materialRecipiente = "plástico"; 
+
+            if (materialRecipiente.Equals("plástico"))
+            {
+                recipienteSeguro = false;
+            }
+            return recipienteSeguro;
+        }
+
+        private bool VerificarCarnePronta()
+        {
+            double temperaturaInternaDaCarne = LerTemperaturaInternaDaCarne(); // Implemente essa função
+
+            double limiteDeTemperatura = 4.0; // Exemplo: 4 graus Celsius
+
+            if (temperaturaInternaDaCarne <= limiteDeTemperatura)
+            {
+                // A carne está pronto para o descongelamento
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("O frango não está pronto para o descongelamento. Certifique-se de que a temperatura interna do frango seja igual ou inferior a " + limiteDeTemperatura + " graus Celsius.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            double LerTemperaturaInternaDaCarne()
+            {
+                Random random = new Random();
+                double temperatura = random.Next(0, 10); // Simula uma temperatura entre 0 e 10 graus Celsius
+                return temperatura;
+            }
+        }
+
+        private void IniciarDescongelamento()
+        {
+            // Defina o tempo de descongelamento em segundos (por exemplo, 10 minutos)
+            tempoDescongelamento = 10 * 60; // 10 minutos em segundos
+
+            // Defina a potência para o descongelamento (por exemplo, 4)
+            int potencia = 4;
+
+            ConfigurarMicroondas(tempoDescongelamento, potencia);
+            tempoRestante = tempoDescongelamento;
+            descongelamentoTimer = new System.Windows.Forms.Timer();
+            descongelamentoTimer.Interval = 1000; // Intervalo de 1 segundo
+            descongelamentoTimer.Tick += TimerTick;
+            descongelamentoTimer.Start();
+        }
+        private void TimerTick(object sender, EventArgs e)
+        {
+            tempoRestante--;
+
+            if (tempoRestante <= 0)
+            {
+                // O descongelamento foi concluído
+                descongelamentoTimer.Stop();
+                MessageBox.Show("O descongelamento foi concluído.", "Concluído", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (tempoRestante == tempoDescongelamento / 2)
+            {
+                VirarFrango();
+            }
+
+            // Atualize a exibição do tempo restante
+            textBoxTempo.Text = string.Format("{0:00}:{1:00}", tempoRestante / 60, tempoRestante % 60);
+        }
+
+        private void VirarCarne()
+        {
+            MessageBox.Show("É hora de virar o carne. Abra o micro-ondas com cuidado e vire o carne no prato.", "Instruções para Descongelamento de carne", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Após exibir a mensagem, você pode pausar o aquecimento ou aguardar um tempo para que o usuário possa virar o carne manualmente.
+
+            // Exemplo: Pausar o aquecimento
+            pausado = true;
+
+            // Aguardar até que o usuário confirme que o frango foi virado
+            if (MessageBox.Show("Após virar o carne, clique em OK para continuar o aquecimento.", "Instruções para Descongelamento de Carne", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+            {
+                // Continuar o aquecimento
+                pausado = false;
+                // Você pode ajustar o tempo restante com base no tempo que passou enquanto o carne estava sendo virado.
+                // tempoRestante = ...; // Tempo restante em segundos
+            }
+            else
+            {
+                MessageBox.Show("Usuário cancelou o processo, você pode lidar com isso conforme necessário.");
+            }
+        }
+
+        private bool VerificarFrangoPronto()
+        {
+            double temperaturaInternaDoFrango = LerTemperaturaInternaDoFrango(); // Implemente essa função
+
+            // Defina um limite de temperatura para considerar o frango pronto para o descongelamento
+            double limiteDeTemperatura = 4.0; // Exemplo: 4 graus Celsius
+
+            if (temperaturaInternaDoFrango <= limiteDeTemperatura)
+            {
+                // O frango está pronto para o descongelamento
+                return true;
+            }
+            else
+            {
+                // O frango não está pronto, exiba uma mensagem de precaução
+                MessageBox.Show("O frango não está pronto para o descongelamento. Certifique-se de que a temperatura interna do frango seja igual ou inferior a " + limiteDeTemperatura + " graus Celsius.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            double LerTemperaturaInternaDoFrango()
+            {
+                // Simule a leitura da temperatura do frango (substitua isso pela lógica real)
+                Random random = new Random();
+                double temperatura = random.Next(0, 10); // Simula uma temperatura entre 0 e 10 graus Celsius
+                return temperatura;
+            }
+        }
+
+        private void VirarFrango()
+        {
+            MessageBox.Show("É hora de virar o frango. Abra o micro-ondas com cuidado e vire o frango no prato.", "Instruções para Descongelamento de Frango", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Após exibir a mensagem, você pode pausar o aquecimento ou aguardar um tempo para que o usuário possa virar o frango manualmente.
+
+            // Exemplo: Pausar o aquecimento
+            pausado = true;
+
+            // Aguardar até que o usuário confirme que o frango foi virado
+            if (MessageBox.Show("Após virar o frango, clique em OK para continuar o aquecimento.", "Instruções para Descongelamento de Frango", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+            {
+                // Continuar o aquecimento
+                pausado = false;
+                // Você pode ajustar o tempo restante com base no tempo que passou enquanto o frango estava sendo virado.
+                // tempoRestante = ...; // Tempo restante em segundos
+            }
+            else
+            {
+                MessageBox.Show("Usuário cancelou o processo, você pode lidar com isso conforme necessário.");
+            }
+        }
     }
-
 }
