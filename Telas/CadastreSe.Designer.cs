@@ -101,6 +101,7 @@
             txbConfirmaSenha.PasswordChar = '*';
             txbConfirmaSenha.Size = new Size(203, 25);
             txbConfirmaSenha.TabIndex = 6;
+            txbConfirmaSenha.TextChanged += txbConfirmaSenha_TextChanged;
             // 
             // CadastreSe
             // 

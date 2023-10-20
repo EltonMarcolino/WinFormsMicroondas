@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using WinFormsMicroondas.Modelo;
 
 namespace WinFormsMicroondas.Telas
 {
@@ -21,15 +21,21 @@ namespace WinFormsMicroondas.Telas
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
             Controle controle = new Controle();
+
             String mensagem = controle.cadastrar(txbLogin.Text, txbSenha.Text, txbConfirmaSenha.Text);
             if (controle.tem) // bem sucedido
             {
-                MessageBox.Show(mensagem ,"Cadastro",MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(mensagem, "Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
                 MessageBox.Show(controle.mensagem); // mensagem de erro!
             }
+        }
+
+        private void txbConfirmaSenha_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
