@@ -33,7 +33,6 @@ namespace WinFormsMicroondas.Telas
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             Controle controle = new Controle();
-
             controle.acessar(txbLogin.Text, txbSenha.Text);
             if (controle.mensagem.Equals(""))
             {

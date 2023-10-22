@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WinFormsMicroondas.DAL
 {
-     class LoginComandos
+    class LoginComandos
     {
         public bool tem = false;
         public String mensagem = "";
@@ -23,9 +23,9 @@ namespace WinFormsMicroondas.DAL
 
             try
             {
-                cmd.Connection = con.conectar();
+                cmd.Connection = con.conectar(); // faz a conexao
                 dr = cmd.ExecuteReader(); // quando pega informação do banco de dados para guardar
-                if(dr.HasRows ) // se estiver linhas no banco de dados, vai receber
+                if (dr.HasRows) // se estiver linhas no banco de dados, vai receber
                 {
                     tem = true;
                 }
@@ -34,7 +34,6 @@ namespace WinFormsMicroondas.DAL
             }
             catch (SqlException) // se der erro no banco de dados
             {
-
                 this.mensagem = "Erro com os Dados!";
             }
             return tem; // retornar nada
@@ -42,8 +41,8 @@ namespace WinFormsMicroondas.DAL
 
         public String cadastrar(String email, String senha, String confSenha)
         {
-            tem=false;
-            if(senha.Equals(confSenha)) // vereficar senha, se é igual confitmar senha
+            tem = false;
+            if (senha.Equals(confSenha)) // vereficar senha, se é igual confitmar senha
             {
                 cmd.CommandText = "insert into logins values (@email, @senha);";
                 cmd.Parameters.AddWithValue("@email", email);
@@ -52,7 +51,9 @@ namespace WinFormsMicroondas.DAL
                 try
                 {
                     cmd.Connection = con.conectar();
+                    Console.Write("Passou da conexão");
                     cmd.ExecuteNonQuery();
+                    Console.Write("Executou query");
                     con.desconectar();
                     this.mensagem = "Cadastrado com sucesso!";
                     tem = true;
@@ -60,14 +61,14 @@ namespace WinFormsMicroondas.DAL
                 catch (SqlException)
                 {
 
-                    this.mensagem = "Erro no Banco de Dados";
+                    this.mensagem = "Erro no Banco de Dados!!!";
                 }
             }
             else
             {
                 this.mensagem = "Senhas não Confirmdo!";
             }
-           
+
             return mensagem;
         }
 

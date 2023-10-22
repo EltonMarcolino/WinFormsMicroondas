@@ -24,8 +24,26 @@ namespace WinFormsMicroondas
 
         private void ConfigurarMicroondas(int tempoSegundos, int potencia)
         {
-            // Implemente a lógica de configuração do micro-ondas aqui
-            // Isso pode envolver o ajuste da potência e do tempo do micro-ondas
+            // Verificar se a potência está dentro dos limites permitidos (1 a 10, por exemplo)
+            if (potencia < 1)
+            {
+                potencia = 1;
+            }
+            else if (potencia > 10)
+            {
+                potencia = 10;
+            }
+
+            // Certificar-se de que o tempo esteja dentro dos limites
+            if (tempoSegundos < 0)
+            {
+                tempoSegundos = 0;
+            }
+
+            // Exibir a potência e o tempo na interface do usuário
+            textBoxPotencia.Text = potencia.ToString();
+            textBoxTempo.Text = string.Format("{0:00}:{1:00}", tempoSegundos / 60, tempoSegundos % 60);
+
         }
 
         private void IniciarAquecimento(int potencia, int tempoSegundos)
@@ -108,8 +126,15 @@ namespace WinFormsMicroondas
         // Método para iniciar o aquecimento
         private void IniciarAquecimento()
         {
-            // Coloque aqui a lógica para iniciar o aquecimento
-            // Quando um estouro de milho ocorrer, inicie o temporizador com: timer.Start();
+            timer = new System.Timers.Timer();
+            timer.Interval = 10000; // Defina o intervalo em milissegundos (10 segundos)
+            timer.AutoReset = false; // Impede que o temporizador continue a disparar após o primeiro estouro
+            timer.Elapsed += TimerElapsed; // Defina o manipulador de eventos para o temporizador
+        }
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            // Lógica para interromper o aquecimento, por exemplo, parar o micro-ondas ou exibir uma mensagem
+            MessageBox.Show("Aquecimento interrompido devido a intervalo de 10 segundos entre estouros de milho.", "Aviso");
         }
 
         private void btnLeite_Click(object sender, EventArgs e)
@@ -214,11 +239,6 @@ namespace WinFormsMicroondas
                 // Mensagem de precaução
                 MessageBox.Show("Deixe o recipiente destampado e, em casos de plástico, tenha cuidado ao retirar o recipiente, pois o mesmo pode perder resistência em altas temperaturas.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void ConfigureMicroondas(int tempoSegundos, int potencia)
-        {
-            // Implemente a lógica de configuração do micro-ondas aqui
         }
 
         private bool VerificarRecipienteSeguro()

@@ -12,15 +12,15 @@ namespace WinFormsMicroondas.DAL
         SqlConnection con = new SqlConnection(); // conexao com banco de dados
         public Conexao()
         {
-            con.ConnectionString = @"Data Source=DESKTOP-L6VNCFI;Initial Catalog=Login;Integrated Security=True";
+            this.con.ConnectionString = @"Data Source=DESKTOP-L6VNCFI;Initial Catalog=Login;Integrated Security=True;User ID=sa;Password=123456";
         }
 
         public SqlConnection conectar()
         {
-            if (con.State == System.Data.ConnectionState.Closed) // se conexao estiver fechado, posso abrir
+            if (this.con.State == System.Data.ConnectionState.Closed) // se conexao estiver fechado, posso abrir
             {
-                con.Open(); // metodo abrir
-            }
+                this.con.Open(); // metodo abrir
+            } 
             return con; // retornar a conexao
 
         }
